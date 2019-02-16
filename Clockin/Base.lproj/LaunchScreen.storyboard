@@ -27,14 +27,6 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ZQ-gB-1LZ">
-                                <rect key="frame" x="309" y="46" width="50" height="50"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="6dK-2o-l4A"/>
-                                    <constraint firstAttribute="height" constant="50" id="pRM-Vv-Bt6"/>
-                                </constraints>
-                                <state key="normal" image="addIcon"/>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -44,8 +36,6 @@
                             <constraint firstItem="XpK-If-Mip" firstAttribute="bottom" secondItem="Ze5-6b-2t3" secondAttribute="bottom" id="P1X-uh-spF"/>
                             <constraint firstItem="ILN-R1-a20" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="QKl-0Q-p6U"/>
                             <constraint firstItem="XpK-If-Mip" firstAttribute="trailing" secondItem="Ze5-6b-2t3" secondAttribute="trailing" id="Syi-Dm-nUm"/>
-                            <constraint firstItem="0ZQ-gB-1LZ" firstAttribute="centerY" secondItem="ILN-R1-a20" secondAttribute="centerY" id="bgh-cr-Tqb"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="0ZQ-gB-1LZ" secondAttribute="trailing" constant="16" id="rwv-26-Egc"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ILN-R1-a20" secondAttribute="trailing" symbolic="YES" id="snv-Id-pHs"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -57,7 +47,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="addIcon" width="26" height="26"/>
         <image name="homeBG" width="250" height="444.5"/>
     </resources>
 </document>

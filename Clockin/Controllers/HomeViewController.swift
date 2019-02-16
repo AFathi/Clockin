@@ -41,6 +41,8 @@ class HomeViewController: UIViewController {
     var clocksTableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .clear
+        tableView.contentInset = UIEdgeInsets(top: 25, left: 0, bottom: 0, right: 0)
+        tableView.separatorStyle = .none
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -64,6 +66,7 @@ class HomeViewController: UIViewController {
         
         clocksTableView.delegate = self
         clocksTableView.dataSource = self
+        clocksTableView.register(HomeTableCell.self, forCellReuseIdentifier: "ClockCell")
         
         childrenViews = [backgroundImageView, titleLabel, addButton, clocksTableView]
         
@@ -106,10 +109,18 @@ class HomeViewController: UIViewController {
 // MARK: UITableView Delegates & DataSource methods
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "ClockCell") as? HomeTableCell {
+            return cell
+        }
+        
         return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 350
     }
 }

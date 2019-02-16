@@ -10,13 +10,69 @@ import UIKit
 
 class HomeTableCell: UITableViewCell {
 
+    var cellMode: UIClockView.ClockType = .day
+    
+    var cellContentView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 35
+        view.layer.masksToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    var cityTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Avenir-Black", size: 25)
+        label.numberOfLines = 3
+        label.text = "Berlin\nGermany"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    var locationIndicator: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "locationArrow"))
+        imageView.image = imageView.image?.withRenderingMode(.alwaysTemplate)
+        imageView.tintColor = .black
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    var clockView: UIClockView = {
+        let clock = UIClockView()
+        clock.backgroundColor = .red
+        clock.translatesAutoresizingMaskIntoConstraints = false
+        return clock
+    }()
+    
+    var timeDifferenceLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Avenir-Medium", size: 14)
+        label.text = " Now"
+        label.textColor = UIColor(red: 104/255, green: 104/255, blue: 104/255, alpha: 1)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    var tempratureLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Avenir-Black", size: 22)
+        label.text = "18°C"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    var childrenViews = [UIView]()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        selectionStyle = .none
+        backgroundColor = .clear
+        
+        cellContentView.backgroundColor = cellMode.clockBGColor
+        cityTitleLabel.textColor = cellMode.contentItemsColor
+        
+        self.prepareCellLayout()
     }
     
     override func awakeFromNib() {
@@ -26,8 +82,72 @@ class HomeTableCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
         // Configure the view for the selected state
     }
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        if highlighted {
+            UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 1.2, initialSpringVelocity: 1.75, options: .curveEaseOut, animations: {
+                self.transform = self.transform.scaledBy(x: 0.9, y: 0.9)
+            })
+        }else{
+            UIView.animate(withDuration: 0.6, delay: 0.0, usingSpringWithDamping: 0.65, initialSpringVelocity: 1.0, options: .curveEaseOut, animations: {
+                self.transform = CGAffineTransform.identity.scaledBy(x: 1.0, y: 1.0)
+            })
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    fileprivate func prepareCellLayout() {
+        childrenViews = [cellContentView, cityTitleLabel, locationIndicator, clockView, timeDifferenceLabel, tempratureLabel]
+        childrenViews.forEach { childView in
+            if childView == cellContentView {
+                addSubview(childView)
+            }else{
+                cellContentView.addSubview(childView)
+            }
+        }
+        
+        NSLayoutConstraint.activate([
+            // MARK:- Cell content view constraints
+            cellContentView.topAnchor.constraint(equalTo: self.topAnchor),
+            cellContentView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            cellContentView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.85),
+            cellContentView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            
+            // MARK:- Location indicator constraints
+            locationIndicator.topAnchor.constraint(equalTo: cellContentView.topAnchor, constant: 16),
+            locationIndicator.trailingAnchor.constraint(equalTo: cellContentView.trailingAnchor, constant: -16),
+            locationIndicator.widthAnchor.constraint(equalToConstant: 25),
+            locationIndicator.heightAnchor.constraint(equalTo: locationIndicator.widthAnchor, multiplier: 1),
+            
+            // MARK:- City title label constraints
+            cityTitleLabel.topAnchor.constraint(equalTo: cellContentView.topAnchor, constant: 16),
+            cityTitleLabel.leadingAnchor.constraint(equalTo: cellContentView.leadingAnchor, constant: 16),
+            cityTitleLabel.widthAnchor.constraint(lessThanOrEqualTo: cellContentView.widthAnchor, multiplier: 0.7),
+            cityTitleLabel.heightAnchor.constraint(lessThanOrEqualTo: cellContentView.heightAnchor, multiplier: 0.35),
+            
+            // MARK:- Clock view constraints
+            clockView.widthAnchor.constraint(lessThanOrEqualTo: cellContentView.widthAnchor, multiplier: 0.6),
+            clockView.heightAnchor.constraint(equalTo: clockView.widthAnchor, multiplier: 1),
+            clockView.bottomAnchor.constraint(equalTo: cellContentView.bottomAnchor, constant: -16),
+            clockView.trailingAnchor.constraint(equalTo: cellContentView.trailingAnchor, constant: -5),
+            
+            // MARK:- Time difference label constraints
+            timeDifferenceLabel.bottomAnchor.constraint(equalTo: clockView.bottomAnchor),
+            timeDifferenceLabel.leadingAnchor.constraint(equalTo: cellContentView.leadingAnchor, constant: 16),
+            timeDifferenceLabel.trailingAnchor.constraint(equalTo: clockView.leadingAnchor, constant: -5),
+            
+            // MARK:- Temprature label constraints
+            tempratureLabel.bottomAnchor.constraint(equalTo: timeDifferenceLabel.topAnchor, constant: -5),
+            tempratureLabel.leadingAnchor.constraint(equalTo: timeDifferenceLabel.leadingAnchor),
+            tempratureLabel.trailingAnchor.constraint(equalTo: clockView.leadingAnchor, constant: -5),
+            
+        ])
+    }
+    
 
 }

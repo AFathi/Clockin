@@ -15,6 +15,7 @@
 		FB6FF4B82217A5D70017D1A6 /* UIClockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6FF4B72217A5D70017D1A6 /* UIClockView.swift */; };
 		FB6FF4BA2217A6690017D1A6 /* ClockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6FF4B92217A6690017D1A6 /* ClockViewController.swift */; };
 		FB6FF4BC2217A6910017D1A6 /* AddClockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6FF4BB2217A6910017D1A6 /* AddClockViewController.swift */; };
+		FB6FF4BE2217A7890017D1A6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = FB6FF4BD2217A7880017D1A6 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		FB6FF4B72217A5D70017D1A6 /* UIClockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIClockView.swift; sourceTree = "<group>"; };
 		FB6FF4B92217A6690017D1A6 /* ClockViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockViewController.swift; sourceTree = "<group>"; };
 		FB6FF4BB2217A6910017D1A6 /* AddClockViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddClockViewController.swift; sourceTree = "<group>"; };
+		FB6FF4BD2217A7880017D1A6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +46,7 @@
 		FB6FF494221795D90017D1A6 = {
 			isa = PBXGroup;
 			children = (
+				FB6FF4BD2217A7880017D1A6 /* README.md */,
 				FB6FF49F221795D90017D1A6 /* Clockin */,
 				FB6FF49E221795D90017D1A6 /* Products */,
 			);
@@ -155,6 +158,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB6FF4BE2217A7890017D1A6 /* README.md in Resources */,
 				FB6FF4AB221795DB0017D1A6 /* LaunchScreen.storyboard in Resources */,
 				FB6FF4A8221795DB0017D1A6 /* Assets.xcassets in Resources */,
 			);
