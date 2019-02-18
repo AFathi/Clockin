@@ -10,7 +10,11 @@ import UIKit
 
 class HomeTableCell: UITableViewCell {
 
-    var cellMode: UIClockView.ClockType = .day
+    var cellMode: UIClockView.ClockType = .day {
+        didSet {
+            self.updateColors()
+        }
+    }
     
     var cellContentView: UIView = {
         let view = UIView()
@@ -25,6 +29,7 @@ class HomeTableCell: UITableViewCell {
         label.font = UIFont(name: "Avenir-Black", size: 25)
         label.numberOfLines = 3
         label.text = "Berlin\nGermany"
+        label.textColor = .clockinDark
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -32,7 +37,7 @@ class HomeTableCell: UITableViewCell {
     var locationIndicator: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "locationArrow"))
         imageView.image = imageView.image?.withRenderingMode(.alwaysTemplate)
-        imageView.tintColor = .black
+        imageView.tintColor = .clockinDark
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -40,7 +45,6 @@ class HomeTableCell: UITableViewCell {
     
     var clockView: UIClockView = {
         let clock = UIClockView()
-        clock.backgroundColor = .red
         clock.translatesAutoresizingMaskIntoConstraints = false
         return clock
     }()
@@ -58,9 +62,12 @@ class HomeTableCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont(name: "Avenir-Black", size: 22)
         label.text = "18°C"
+        label.textColor = .clockinDark
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    var currentTime: ClockTime!
     
     var childrenViews = [UIView]()
     
@@ -69,21 +76,10 @@ class HomeTableCell: UITableViewCell {
         selectionStyle = .none
         backgroundColor = .clear
         
-        cellContentView.backgroundColor = cellMode.clockBGColor
-        cityTitleLabel.textColor = cellMode.contentItemsColor
-        
         self.prepareCellLayout()
+        NotificationCenter.default.addObserver(self, selector: #selector(didDeviceRotate), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        // Configure the view for the selected state
-    }
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         if highlighted {
@@ -101,6 +97,21 @@ class HomeTableCell: UITableViewCell {
         super.init(coder: aDecoder)
     }
     
+    @objc func didDeviceRotate() {
+        self.clockView.setNeedsDisplay()
+    }
+    
+    fileprivate func updateColors() {
+        UIView.animate(withDuration: 0.3) {
+            self.cellContentView.backgroundColor = self.cellMode.clockBGColor
+            self.cityTitleLabel.textColor = self.cellMode.contentItemsColor
+            self.locationIndicator.tintColor = self.cellMode.contentItemsColor
+            self.clockView.type = self.cellMode
+            self.tempratureLabel.textColor = self.cellMode.contentItemsColor
+            
+        }
+    }
+    
     fileprivate func prepareCellLayout() {
         childrenViews = [cellContentView, cityTitleLabel, locationIndicator, clockView, timeDifferenceLabel, tempratureLabel]
         childrenViews.forEach { childView in
@@ -113,8 +124,8 @@ class HomeTableCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             // MARK:- Cell content view constraints
-            cellContentView.topAnchor.constraint(equalTo: self.topAnchor),
-            cellContentView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            cellContentView.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
+            cellContentView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5),
             cellContentView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.85),
             cellContentView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             
@@ -134,7 +145,7 @@ class HomeTableCell: UITableViewCell {
             clockView.widthAnchor.constraint(lessThanOrEqualTo: cellContentView.widthAnchor, multiplier: 0.6),
             clockView.heightAnchor.constraint(equalTo: clockView.widthAnchor, multiplier: 1),
             clockView.bottomAnchor.constraint(equalTo: cellContentView.bottomAnchor, constant: -16),
-            clockView.trailingAnchor.constraint(equalTo: cellContentView.trailingAnchor, constant: -5),
+            clockView.trailingAnchor.constraint(equalTo: cellContentView.trailingAnchor, constant: -10),
             
             // MARK:- Time difference label constraints
             timeDifferenceLabel.bottomAnchor.constraint(equalTo: clockView.bottomAnchor),
@@ -147,6 +158,7 @@ class HomeTableCell: UITableViewCell {
             tempratureLabel.trailingAnchor.constraint(equalTo: clockView.leadingAnchor, constant: -5),
             
         ])
+        
     }
     
 

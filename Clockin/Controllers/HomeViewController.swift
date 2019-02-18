@@ -10,6 +10,8 @@ import UIKit
 
 class HomeViewController: UIViewController {
 
+    // Weather data: https://home.openweathermap.org/
+    
     // Declaring & initializing the image view used for the home screen's background.
     var backgroundImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "homeBG"))
@@ -48,6 +50,22 @@ class HomeViewController: UIViewController {
     }()
     
     var childrenViews = [UIView]()
+    
+    let userCurrentTimezone = ClockTime.current?.timezone
+    
+    var userTimes: [ClockTime.ClockTimezone] = {
+        if let current = ClockTime.current {
+            let timezone = current.timezone
+            return [timezone] + ClockTime.allTimezones
+        }
+        return ClockTime.allTimezones
+    }()
+    // Handling when userTimes array is modified
+    {
+        didSet {
+            clocksTableView.reloadData()
+        }
+    }
     
     // Overriding statusbar default color and changing it to a light/white color
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -109,18 +127,43 @@ class HomeViewController: UIViewController {
 // MARK: UITableView Delegates & DataSource methods
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return userTimes.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "ClockCell") as? HomeTableCell {
+            let cellTime = userTimes[indexPath.row]
+            let clockTime = ClockTime(timezone: cellTime)
+            let timeZone = TimeZone.init(identifier: cellTime.id)
+            let timeDifference = (timeZone?.secondsFromGMT(for: Date()) ?? 0) / 3600
+            
+            cell.locationIndicator.isHidden = userCurrentTimezone?.id ?? "" != cellTime.id
+            cell.cellMode = (clockTime.hrs >= 18 || clockTime.hrs < 5) ? .night : .day
+            cell.clockView.startAnimation(from: clockTime)
+            cell.cityTitleLabel.text = "\(cellTime.city)\n\(cellTime.continent)"
+            cell.tempratureLabel.text = "🙈°C"
+            cell.timeDifferenceLabel.text = "GMT \(timeDifference >= 0 ? "+" : "")\(timeDifference)"
             return cell
         }
         
         return UITableViewCell()
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //if let cell = tableView.cellForRow(at: indexPath) as? HomeTableCell {
+            //cell.cellMode = (cell.cellMode == .day) ? .night : .day
+        //}
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 350
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            return 300
+        }else{
+            if self.view.bounds.width > self.view.bounds.height {
+                return self.view.bounds.height*0.95
+            }else{
+                return self.view.bounds.height*0.55
+            }
+        }
     }
 }

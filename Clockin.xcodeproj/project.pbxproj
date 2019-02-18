@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FB32C47D2218A47C00E85201 /* UIColor+Clockin.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB32C47C2218A47C00E85201 /* UIColor+Clockin.swift */; };
+		FB32C4812218B75900E85201 /* ClockTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB32C4802218B75900E85201 /* ClockTime.swift */; };
 		FB6FF4A1221795D90017D1A6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6FF4A0221795D90017D1A6 /* AppDelegate.swift */; };
 		FB6FF4A3221795D90017D1A6 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6FF4A2221795D90017D1A6 /* HomeViewController.swift */; };
 		FB6FF4A8221795DB0017D1A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB6FF4A7221795DB0017D1A6 /* Assets.xcassets */; };
@@ -19,6 +21,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FB32C47C2218A47C00E85201 /* UIColor+Clockin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Clockin.swift"; sourceTree = "<group>"; };
+		FB32C4802218B75900E85201 /* ClockTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockTime.swift; sourceTree = "<group>"; };
 		FB6FF49D221795D90017D1A6 /* Clockin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clockin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB6FF4A0221795D90017D1A6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB6FF4A2221795D90017D1A6 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -70,6 +74,7 @@
 				FB6FF4A7221795DB0017D1A6 /* Assets.xcassets */,
 				FB6FF4A9221795DB0017D1A6 /* LaunchScreen.storyboard */,
 				FB6FF4AC221795DB0017D1A6 /* Info.plist */,
+				FB32C47C2218A47C00E85201 /* UIColor+Clockin.swift */,
 			);
 			path = Clockin;
 			sourceTree = "<group>";
@@ -77,6 +82,7 @@
 		FB6FF4B22217A52D0017D1A6 /* Clock */ = {
 			isa = PBXGroup;
 			children = (
+				FB32C4802218B75900E85201 /* ClockTime.swift */,
 				FB6FF4B72217A5D70017D1A6 /* UIClockView.swift */,
 			);
 			path = Clock;
@@ -174,6 +180,8 @@
 				FB6FF4A3221795D90017D1A6 /* HomeViewController.swift in Sources */,
 				FB6FF4BC2217A6910017D1A6 /* AddClockViewController.swift in Sources */,
 				FB6FF4A1221795D90017D1A6 /* AppDelegate.swift in Sources */,
+				FB32C47D2218A47C00E85201 /* UIColor+Clockin.swift in Sources */,
+				FB32C4812218B75900E85201 /* ClockTime.swift in Sources */,
 				FB6FF4B82217A5D70017D1A6 /* UIClockView.swift in Sources */,
 				FB6FF4BA2217A6690017D1A6 /* ClockViewController.swift in Sources */,
 				FB6FF4B62217A59B0017D1A6 /* HomeTableCell.swift in Sources */,
