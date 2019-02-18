@@ -13,4 +13,4 @@ Additionally, `UIClockView` & `ClockTime` is availble to use under the MIT Licen
 
 
 ## License
-[MIT License for `UIClockView` & `ClockTime`](http://github.com/AFathi/#MITLicense)
+[MIT License for `UIClockView` & `ClockTime`](LICENSE)
