@@ -34,7 +34,7 @@ class UIClockView: UIView {
             }
         }
         
-        /// An instance returing the appropraite backgrounf color based on the clock type.
+        /// An instance returing the appropraite background color based on the clock type.
         var clockBGColor: UIColor {
             switch self {
             case .day:
@@ -246,7 +246,7 @@ class UIClockView: UIView {
         secondHandLayerAnimation.duration = 60
         secondHandLayerAnimation.timingFunction = CAMediaTimingFunction(name: .linear)
         secondHandLayerAnimation.isRemovedOnCompletion = false
-        clockSecondHandLayer.add(secondHandLayerAnimation, forKey: nil)
+        clockSecondHandLayer.add(secondHandLayerAnimation, forKey: "second hand layer rotation")
         
         // Creating clockwise rotation animation for the second hand layer. Duration in seconds = 3600. And the animation runs infinitely unless this method is called again.
         // Meaning it'd take the minute hand 1 minute to complete a full orientation
@@ -257,7 +257,7 @@ class UIClockView: UIView {
         minuteHandLayerAnimation.duration = 3600
         minuteHandLayerAnimation.timingFunction = CAMediaTimingFunction(name: .linear)
         minuteHandLayerAnimation.isRemovedOnCompletion = false
-        clockMinuteHandLayer.add(minuteHandLayerAnimation, forKey: nil)
+        clockMinuteHandLayer.add(minuteHandLayerAnimation, forKey: "minute hand layer rotation")
         
         // Creating clockwise rotation animation for the second hand layer. Duration in seconds = 43200. And the animation runs infinitely unless this method is called again.
         // Meaning it'd take the minute hand 1 hour to complete a full orientation
@@ -268,7 +268,7 @@ class UIClockView: UIView {
         hourHandLayerAnimation.duration = 43200
         hourHandLayerAnimation.timingFunction = CAMediaTimingFunction(name: .linear)
         hourHandLayerAnimation.isRemovedOnCompletion = false
-        clockHourHandLayer.add(hourHandLayerAnimation, forKey: nil)
+        clockHourHandLayer.add(hourHandLayerAnimation, forKey: "hour hand layer rotation")
     }
     
 }

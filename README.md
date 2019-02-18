@@ -1,4 +1,8 @@
 # Clockin
+![home](home.png)
+![day mode](dayMode.png)
+![night mode](nightMode.png)
+
 ## An Experimental Project. 
 
 Clockin is a simple iOS app that lists various timezones in a tableview. Each cell in the tableview includes an animated analog clock written in Swift using `Core Graphics` and `UIKit`.
@@ -8,6 +12,7 @@ This application is developed completly from scratch over a weekend. The purpose
 **Full disclosure**: The application has a few UI bugs mainly visible on iPad. Didn't have enough time to fix them.
 
 Additionally, `UIClockView` & `ClockTime` is availble to use under the MIT License.
+
 
 ## License
 [MIT License for `UIClockView` & `ClockTime`](http://github.com/AFathi/#MITLicense)

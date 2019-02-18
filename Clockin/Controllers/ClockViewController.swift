@@ -58,7 +58,7 @@ class ClockViewController: UIViewController {
         label.font = UIFont(name: "Avenir-Black", size: 22)
         label.text = "18°C"
         label.textColor = .clockinDark
-        label.textAlignment = .left
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
