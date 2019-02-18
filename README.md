@@ -1,7 +1,5 @@
 # Clockin
-![home](home.png)
-![day mode](dayMode.png)
-![night mode](nightMode.png)
+<img src="home.png" width="25%"> <img src="dayMode.png" width="25%"> <img src="nightMode.png" width="25%">
 
 ## An Experimental Project. 
 
