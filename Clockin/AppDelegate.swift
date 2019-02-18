@@ -45,14 +45,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        // Updates time when user comes back from background
+        if let homeView = self.window?.rootViewController as? HomeViewController {
+            homeView.userTimes.removeAll()
+            homeView.userTimes = ClockTime.timezoneClockinDefaults
+        }
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        // Updates time when user comes back from background
-        if let homeView = self.window?.rootViewController as? HomeViewController {
-            homeView.clocksTableView.reloadData()
-        }
+
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

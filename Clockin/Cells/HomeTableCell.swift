@@ -66,9 +66,7 @@ class HomeTableCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    var currentTime: ClockTime!
-    
+        
     var childrenViews = [UIView]()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -77,6 +75,7 @@ class HomeTableCell: UITableViewCell {
         backgroundColor = .clear
         
         self.prepareCellLayout()
+        
         NotificationCenter.default.addObserver(self, selector: #selector(didDeviceRotate), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
@@ -102,14 +101,11 @@ class HomeTableCell: UITableViewCell {
     }
     
     fileprivate func updateColors() {
-        UIView.animate(withDuration: 0.3) {
-            self.cellContentView.backgroundColor = self.cellMode.clockBGColor
-            self.cityTitleLabel.textColor = self.cellMode.contentItemsColor
-            self.locationIndicator.tintColor = self.cellMode.contentItemsColor
-            self.clockView.type = self.cellMode
-            self.tempratureLabel.textColor = self.cellMode.contentItemsColor
-            
-        }
+        self.cellContentView.backgroundColor = self.cellMode.clockBGColor
+        self.cityTitleLabel.textColor = self.cellMode.contentItemsColor
+        self.locationIndicator.tintColor = self.cellMode.contentItemsColor
+        self.clockView.type = self.cellMode
+        self.tempratureLabel.textColor = self.cellMode.contentItemsColor
     }
     
     fileprivate func prepareCellLayout() {

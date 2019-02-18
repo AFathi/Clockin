@@ -9,8 +9,6 @@
 import UIKit
 
 class HomeViewController: UIViewController {
-
-    // Weather data: https://home.openweathermap.org/
     
     // Declaring & initializing the image view used for the home screen's background.
     var backgroundImageView: UIImageView = {
@@ -53,15 +51,7 @@ class HomeViewController: UIViewController {
     
     let userCurrentTimezone = ClockTime.current?.timezone
     
-    var userTimes: [ClockTime.ClockTimezone] = {
-        if let current = ClockTime.current {
-            let timezone = current.timezone
-            return [timezone] + ClockTime.allTimezones
-        }
-        return ClockTime.allTimezones
-    }()
-    // Handling when userTimes array is modified
-    {
+    var userTimes: [ClockTime.ClockTimezone] = ClockTime.timezoneClockinDefaults {
         didSet {
             clocksTableView.reloadData()
         }
@@ -74,12 +64,15 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // An observer that handles when a user selects timezone
+        NotificationCenter.default.addObserver(self, selector: #selector(didUserSelectTimezone), name: Notification.Name("didSelectTimezone"), object: nil)
+        
         self.prepareUILayout()
     }
     
     // A method that handles activating the view's constraints
     func prepareUILayout() {
-        
         addButton.addTarget(self, action: #selector(addTimezoneHandler(sender:)), for: .touchUpInside)
         
         clocksTableView.delegate = self
@@ -118,8 +111,15 @@ class HomeViewController: UIViewController {
         ])
     }
     
-    
     @objc func addTimezoneHandler(sender: UIButton) {
+        let addClockController = AddClockViewController()
+        addClockController.userCurrentTimezones = userTimes
+        self.present(addClockController, animated: true)
+    }
+    
+    @objc func didUserSelectTimezone() {
+        // Updates data when user adds a new timezone
+        userTimes = ClockTime.timezoneClockinDefaults
     }
 }
 
@@ -138,7 +138,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             let timeDifference = (timeZone?.secondsFromGMT(for: Date()) ?? 0) / 3600
             
             cell.locationIndicator.isHidden = userCurrentTimezone?.id ?? "" != cellTime.id
-            cell.cellMode = (clockTime.hrs >= 18 || clockTime.hrs < 5) ? .night : .day
+            cell.cellMode = (clockTime.hrs >= 18 || clockTime.hrs < 6) ? .night : .day
             cell.clockView.startAnimation(from: clockTime)
             cell.cityTitleLabel.text = "\(cellTime.city)\n\(cellTime.continent)"
             cell.tempratureLabel.text = "🙈°C"
@@ -150,9 +150,21 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //if let cell = tableView.cellForRow(at: indexPath) as? HomeTableCell {
-            //cell.cellMode = (cell.cellMode == .day) ? .night : .day
-        //}
+        let cellTime = userTimes[indexPath.row]
+        let clockView = ClockViewController()
+        let clockTime = ClockTime(timezone: cellTime)
+        let timeZone = TimeZone.init(identifier: cellTime.id)
+        let timeDifference = (timeZone?.secondsFromGMT(for: Date()) ?? 0) / 3600
+        
+        clockView.currentTimezone = cellTime
+        clockView.locationIndicator.isHidden = userCurrentTimezone?.id ?? "" != cellTime.id
+        clockView.clockMode = (clockTime.hrs >= 18 || clockTime.hrs < 6) ? .night : .day
+        clockView.clockView.startAnimation(from: clockTime)
+        clockView.cityTitleLabel.text = "\(cellTime.city)\n\(cellTime.continent)"
+        clockView.tempratureLabel.text = "🙈°C"
+        clockView.timeDifferenceLabel.text = "GMT \(timeDifference >= 0 ? "+" : "")\(timeDifference)"
+        
+        self.navigationController?.pushViewController(clockView, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

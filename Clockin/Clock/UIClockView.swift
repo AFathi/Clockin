@@ -10,13 +10,21 @@ import Foundation
 import CoreGraphics
 import UIKit
 
+/// A UIView subclass that draws a clock in the view's frame.
 class UIClockView: UIView {
+    
+    /// An enum that provides the differnt types clocks available
     enum ClockType {
+        /// Not currently available to use.
         case sunrise
+        /// A clock type for day mode
         case day
+        /// Not currently available to use.
         case sunset
+        /// A clock type for night mode
         case night
         
+        /// An instance returing the appropraite content color based on the clock type.
         var contentItemsColor: UIColor {
             switch self {
             case .day:
@@ -26,6 +34,7 @@ class UIClockView: UIView {
             }
         }
         
+        /// An instance returing the appropraite backgrounf color based on the clock type.
         var clockBGColor: UIColor {
             switch self {
             case .day:
@@ -36,22 +45,25 @@ class UIClockView: UIView {
         }
     }
     
-    var sublayerNames: Set<String> = ["Clock Base Background", "Rounded Clock Background", "Clock Hour Hand", "Clock Minute Hand", "Clock Second Hand", "Clock Large Ticks", "Clock Small Ticks"]
+    // A set used to store all layer names. To avoid re-drawing layers
+    fileprivate var sublayerNames: Set<String> = ["Clock Base Background", "Rounded Clock Background", "Clock Hour Hand", "Clock Minute Hand", "Clock Second Hand", "Clock Large Ticks", "Clock Small Ticks"]
     
-    var backgroundLayer: CALayer = {
+    // The parent layer of the clock ticks
+    fileprivate var backgroundLayer: CALayer = {
         let layer = CALayer()
         layer.name = "Clock Base Background"
         return layer
     }()
     
-    var roundedClockLayer: CALayer = {
+    // The parent layer of the clock hands
+    fileprivate var roundedClockLayer: CALayer = {
         let layer = CALayer()
         layer.name = "Rounded Clock Background"
         return layer
     }()
     
     // Hour ticks
-    var largeTickParentLayer: CAReplicatorLayer = {
+    fileprivate var largeTickParentLayer: CAReplicatorLayer = {
         let layer = CAReplicatorLayer()
         layer.name = "Clock Large Ticks"
         layer.instanceCount = 12
@@ -61,7 +73,7 @@ class UIClockView: UIView {
     }()
     
     // Second ticks
-    var smallTickParentLayer: CAReplicatorLayer = {
+    fileprivate var smallTickParentLayer: CAReplicatorLayer = {
         let layer = CAReplicatorLayer()
         layer.name = "Clock Small Ticks"
         layer.instanceCount = 60
@@ -70,26 +82,29 @@ class UIClockView: UIView {
         return layer
     }()
     
-    var clockHourHandLayer: CALayer = {
+    // Hour hand layer
+    fileprivate var clockHourHandLayer: CALayer = {
         let layer = CALayer()
         layer.name = "Clock Hour Hand"
         return layer
     }()
     
-    var clockMinuteHandLayer: CALayer = {
+    // Minute hand layer
+    fileprivate var clockMinuteHandLayer: CALayer = {
         let layer = CALayer()
         layer.name = "Clock Minute Hand"
         return layer
     }()
     
-    var clockSecondHandLayer: CALayer = {
+    // Second hand layer
+    fileprivate var clockSecondHandLayer: CALayer = {
         let layer = CALayer()
         layer.name = "Clock Second Hand"
         return layer
     }()
     
-    // An instance used to update the view's layers colors based on the time of the day
-    var type: ClockType = .day {
+    /// An instance used to update the view's layers colors based on the time of the day
+    public var type: ClockType = .day {
         didSet {
             guard oldValue != type else { return }
             self.updateLayerColors()
@@ -97,7 +112,7 @@ class UIClockView: UIView {
     }
     
     override func draw(_ rect: CGRect) {
-        // Base case used to avoid re-drawing layers when using `UIClockView` in a reusable cell.
+        // Base case used to avoid re-drawing layers when using `UIClockView` in a reusable cell by removing previously drawn layers.
         if let sublayers = self.layer.sublayers {
             smallTickParentLayer.sublayers?.removeAll()
             largeTickParentLayer.sublayers?.removeAll()
@@ -114,6 +129,7 @@ class UIClockView: UIView {
         self.drawHandLayers(in: roundedClockLayer.frame)
     }
     
+    // A method that handles drawing the base layers of the clock view.
     fileprivate func drawBaseLayers(in rect: CGRect) {
         backgroundLayer.frame = rect
         backgroundLayer.backgroundColor = (type == .day) ? UIColor.clockBGLight.withAlphaComponent(0.8).cgColor : UIColor.clockBGDark.withAlphaComponent(0.8).cgColor
@@ -132,6 +148,7 @@ class UIClockView: UIView {
         backgroundLayer.addSublayer(roundedClockLayer)
     }
     
+    // A method that handles drawing the clock tips/ticks on the bg layer.
     fileprivate func drawTickLayers(in rect: CGRect) {
         smallTickParentLayer.frame = rect
         self.layer.addSublayer(smallTickParentLayer)
@@ -153,6 +170,7 @@ class UIClockView: UIView {
         largeTickParentLayer.addSublayer(largeTickChildLayer)
     }
     
+    // A method that handles drawing the hand layers and setting their anchor point to the center of the clock view
     fileprivate func drawHandLayers(in rect: CGRect) {
         clockSecondHandLayer.anchorPoint = CGPoint(x: 0.5, y: 0.2)
         clockSecondHandLayer.position = CGPoint(x: rect.size.width/2, y: rect.size.height/2)
@@ -178,6 +196,7 @@ class UIClockView: UIView {
         roundedClockLayer.addSublayer(clockHourHandLayer)
     }
     
+    // A method that's executed when `self.type` is changed to update the colors of the clock layers based on the time of the day.
     fileprivate func updateLayerColors() {
         backgroundLayer.backgroundColor = (type == .day) ? UIColor.clockBGLight.withAlphaComponent(0.8).cgColor : UIColor.clockBGDark.withAlphaComponent(0.8).cgColor
         roundedClockLayer.backgroundColor = (type == .day) ? UIColor.clockBGLight.cgColor : UIColor.clockBGDark.cgColor
@@ -196,6 +215,7 @@ class UIClockView: UIView {
         }
     }
     
+    // A method that calculates the angles of the hand layers @ a specific time. Returns a tuple of (hour's angle, min's angle, sec's angle)
     fileprivate func set(time: ClockTime) -> (CGFloat, CGFloat, CGFloat) {
         let hourTime = CGFloat(time.hrs * (360 / 12)) + CGFloat(time.mins) * (1.0 / 60) * (360 / 12)
         let minuteTime = CGFloat(time.mins * (360 / 60))
@@ -209,38 +229,46 @@ class UIClockView: UIView {
     }
     
     func startAnimation(from time: ClockTime) {
+        // Removing all animation from the layers before adding the clock ticking animation
         clockSecondHandLayer.removeAllAnimations()
         clockMinuteHandLayer.removeAllAnimations()
         clockHourHandLayer.removeAllAnimations()
         
+        // Getting the angles of the hand layers.
         let times = self.set(time: time)
         
-        let secondsHandAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
-        secondsHandAnimation.repeatCount = .infinity
-        secondsHandAnimation.duration = 60
-        secondsHandAnimation.isRemovedOnCompletion = false
-        secondsHandAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
-        secondsHandAnimation.fromValue = (times.2 + 180) * CGFloat(Double.pi / 180)
-        secondsHandAnimation.byValue = 2 * Double.pi
-        clockSecondHandLayer.add(secondsHandAnimation, forKey: "secondsHandAnimation")
+        // Creating clockwise rotation animation for the second hand layer. Duration in seconds = 60. And the animation runs infinitely unless this method is called again.
+        // Meaning it'd take the second hand 60 seconds to complete a full orientation
+        let secondHandLayerAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+        secondHandLayerAnimation.fromValue = (times.2 + 180) * (.pi / 180)
+        secondHandLayerAnimation.byValue = 2 * CGFloat.pi
+        secondHandLayerAnimation.repeatCount = .infinity
+        secondHandLayerAnimation.duration = 60
+        secondHandLayerAnimation.timingFunction = CAMediaTimingFunction(name: .linear)
+        secondHandLayerAnimation.isRemovedOnCompletion = false
+        clockSecondHandLayer.add(secondHandLayerAnimation, forKey: nil)
         
-        let minutesHandAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
-        minutesHandAnimation.repeatCount = Float.infinity
-        minutesHandAnimation.duration = 60 * 60
-        minutesHandAnimation.isRemovedOnCompletion = false
-        minutesHandAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
-        minutesHandAnimation.fromValue = (times.1 + 180) * CGFloat(Double.pi / 180)
-        minutesHandAnimation.byValue = 2 * Double.pi
-        clockMinuteHandLayer.add(minutesHandAnimation, forKey: "minutesHandAnimation")
+        // Creating clockwise rotation animation for the second hand layer. Duration in seconds = 3600. And the animation runs infinitely unless this method is called again.
+        // Meaning it'd take the minute hand 1 minute to complete a full orientation
+        let minuteHandLayerAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+        minuteHandLayerAnimation.fromValue = (times.1 + 180) * (.pi / 180)
+        minuteHandLayerAnimation.byValue = 2 * CGFloat.pi
+        minuteHandLayerAnimation.repeatCount = .infinity
+        minuteHandLayerAnimation.duration = 3600
+        minuteHandLayerAnimation.timingFunction = CAMediaTimingFunction(name: .linear)
+        minuteHandLayerAnimation.isRemovedOnCompletion = false
+        clockMinuteHandLayer.add(minuteHandLayerAnimation, forKey: nil)
         
-        let hoursHandAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
-        hoursHandAnimation.repeatCount = Float.infinity
-        hoursHandAnimation.duration = CFTimeInterval(60 * 60 * 12);
-        hoursHandAnimation.isRemovedOnCompletion = false
-        hoursHandAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
-        hoursHandAnimation.fromValue = (times.0 + 180)  * CGFloat(Double.pi / 180)
-        hoursHandAnimation.byValue = 2 * Double.pi
-        clockHourHandLayer.add(hoursHandAnimation, forKey: "hoursHandAnimation")
+        // Creating clockwise rotation animation for the second hand layer. Duration in seconds = 43200. And the animation runs infinitely unless this method is called again.
+        // Meaning it'd take the minute hand 1 hour to complete a full orientation
+        let hourHandLayerAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+        hourHandLayerAnimation.fromValue = (times.0 + 180)  * (.pi / 180)
+        hourHandLayerAnimation.byValue = 2 * CGFloat.pi
+        hourHandLayerAnimation.repeatCount = .infinity
+        hourHandLayerAnimation.duration = 43200
+        hourHandLayerAnimation.timingFunction = CAMediaTimingFunction(name: .linear)
+        hourHandLayerAnimation.isRemovedOnCompletion = false
+        clockHourHandLayer.add(hourHandLayerAnimation, forKey: nil)
     }
     
 }
